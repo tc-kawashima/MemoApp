@@ -15,7 +15,7 @@ const List = () => {
                 <MemoListItem />
             </View>
             <CircleButton>
-                <Icon />
+                <Icon name='plus' size={40} color='#FFF'/>
             </CircleButton>
         </View>
     )
