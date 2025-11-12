@@ -4,6 +4,15 @@
     "strict": true,
     "jsx": "react-jsx",
     "esModuleInterop": true,
-    "types": ["react", "react-dom", "jest"]
+    "types": [
+      "react",
+      "react-dom",
+      "jest"
+    ],
+    "paths": {
+      "@firebase/auth": [
+        "./node_modules/firebase/node_modules/@firebase/auth/dist/index.rn.d.ts"
+      ]
+    }
   }
 }
