@@ -96,10 +96,16 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
         )
     }
 
-    // アカウント連携画面への遷移 (次のステップで作成)
+    // アカウント連携画面への遷移
     const handleLinkAccount = () => {
         onClose()
         router.replace('/settings/link_account')
+    }
+
+    // アカウント削除画面への遷移
+    const handleDeleteAccount = () => {
+        onClose()
+        router.replace('/settings/delete_account')
     }
 
     // visible が false の間は Modal を非表示にし、描画負荷を軽減
@@ -129,7 +135,7 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
                     ]}
                 >
                     <View style={styles.menuHeader}>
-                        <Text style={styles.menuTitle}>menu</Text>
+                        <Text style={styles.menuTitle}>Menu</Text>
                         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
                             <Text style={styles.closeButtonText}>✕</Text>
                         </TouchableOpacity>
@@ -137,12 +143,16 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
 
                     {isAnonymous && (
                         <TouchableOpacity style={styles.menuItem} onPress={handleLinkAccount}>
-                            <Text style={styles.menuItemText}>Link Email Address</Text>
+                            <Text style={styles.menuItemText}>アカウント連携</Text>
                         </TouchableOpacity>
                     )}
 
                     <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
-                        <Text style={styles.menuItemText}>Log out</Text>
+                        <Text style={styles.menuItemText}>ログアウト</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.menuItem} onPress={handleDeleteAccount}>
+                        <Text style={[styles.menuItemText, { color: '#FF0000' }]}>アカウント削除</Text>
                     </TouchableOpacity>
 
                 </Animated.View>

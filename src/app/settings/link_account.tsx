@@ -16,7 +16,7 @@ const handleLinkAccount = async (email: string, password: string): Promise<void>
 
     // 1. ゲスト判定と入力チェック
     if (!user || !user.isAnonymous) {
-        Alert.alert('エラー', '操作を行うには、ゲストユーザーとしてログインしている必要があります。')
+        Alert.alert('エラー', 'この操作を実行するには、ゲストユーザーとしてサインインしている必要があります。')
         router.replace('/auth/log_in')
         return
     }
@@ -39,7 +39,7 @@ const handleLinkAccount = async (email: string, password: string): Promise<void>
     } catch (error: unknown) {
 
         // ログ出力（デバッグ用）
-        console.error('Account linking failed:', error)
+        console.error('アカウント連携失敗:', error)
 
         // 1. errorがオブジェクトであり、codeプロパティを持つかをチェックする型ガード
         if (typeof error === 'object' && error !== null && 'code' in error) {
@@ -48,14 +48,14 @@ const handleLinkAccount = async (email: string, password: string): Promise<void>
 
             // 2. Firebaseのエラーコードに基づいた詳細なエラー処理
             if (firebaseError.code === 'auth/email-already-in-use') {
-                Alert.alert('連携失敗', 'このメールアドレスは既に他のアカウントで使用されています。')
+                Alert.alert('連携失敗', 'このメールアドレスは既に別のアカウントで使用されています。')
             } else if (firebaseError.code === 'auth/invalid-email') {
-                 Alert.alert('連携失敗', '無効なメールアドレスです。')
+                Alert.alert('連携失敗', 'メールアドレスの形式が正しくありません。')
             } else {
-                 Alert.alert('連携失敗', `エラーが発生しました: ${firebaseError.message}`)
+                Alert.alert('連携失敗', `エラーが発生しました: ${firebaseError.message}`)
             }
         } else {
-            Alert.alert('連携失敗', '予期せぬエラーが発生しました。時間を置いてお試しください。')
+            Alert.alert('連携失敗', '予期せぬエラーが発生しました。時間をおいて再度お試しください。')
         }
     }
 }
@@ -80,7 +80,7 @@ const LinkAccount = () => {
                     style={styles.input}
                     value={email}
                     onChangeText={setEmail}
-                    placeholder='メールアドレス'
+                    placeholder='Email Address'
                     keyboardType='email-address'
                     textContentType='emailAddress'
                     autoCapitalize='none'
@@ -90,7 +90,7 @@ const LinkAccount = () => {
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry
-                    placeholder='パスワード（6文字以上）'
+                    placeholder='password'
                     textContentType='password'
                     autoCapitalize='none'
                 />
@@ -101,6 +101,15 @@ const LinkAccount = () => {
                 >
                     <Text style={styles.buttonLabel}>アカウントを連携して保存</Text>
                 </TouchableOpacity>
+
+                <View style={styles.cancelButtonLabel}>
+                    <TouchableOpacity
+                        style={styles.cancelButton}
+                        onPress={() => router.replace('/memo/list')}
+                    >
+                        <Text style={styles.cancelButtonText}>キャンセルして戻る</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     )
@@ -116,10 +125,33 @@ const styles = StyleSheet.create({
         height: 48, padding: 8, fontSize: 16, marginBottom: 16, borderRadius: 4
     },
     button: {
-        backgroundColor: '#1D428A', borderRadius: 4, paddingVertical: 12, marginTop: 16
+        backgroundColor: '#1D428A',
+        borderRadius: 4,
+        paddingVertical: 12,
+        marginTop: 16,
+        marginBottom: 16
     },
     buttonLabel: {
-        fontSize: 18, color: '#FFF', textAlign: 'center', fontWeight: 'bold'
+        fontSize: 18,
+        color: '#FFF',
+        textAlign: 'center',
+        fontWeight: 'bold'
+    },
+    cancelButtonLabel: {
+        width: '100%',
+        alignItems: 'center',
+        paddingVertical: 10
+    },
+    cancelButton: {
+        backgroundColor: 'transparent',
+        borderRadius: 4,
+        paddingVertical: 10
+    },
+    cancelButtonText: {
+        fontSize: 16,
+        color: '#222',
+        textAlign: 'center',
+        fontWeight: 'bold'
     }
 })
 
