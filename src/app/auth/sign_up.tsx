@@ -90,7 +90,8 @@ const styles = StyleSheet.create({
         marginBottom: 16
     },
     footer: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        justifyContent: 'flex-end'
     },
     footerText: {
         fontSize: 14,

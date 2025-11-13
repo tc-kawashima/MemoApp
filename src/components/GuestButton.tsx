@@ -5,7 +5,7 @@ interface Props {
     onPress?: () => void
 }
 
-const Button = (props: Props) => {
+const GuestButton = (props: Props) => {
     const { label, onPress } = props
     return (
         <TouchableOpacity onPress={onPress} style={styles.button}>
@@ -16,18 +16,19 @@ const Button = (props: Props) => {
 
 const styles = StyleSheet.create({
         button: {
-        backgroundColor: '#1D428A',
+        backgroundColor: 'rgba(29,66,138,0.75)',
         borderRadius: 4,
-        alignSelf: 'flex-end',
-        marginBottom: 12
+        alignSelf: 'stretch',
+        marginTop: 24
     },
     buttonLabel: {
         fontSize: 16,
         lineHeight: 28,
         color: '#FFF',
+        textAlign: 'center',
         paddingVertical: 8,
         paddingHorizontal: 24
     }
 })
 
-export default Button
+export default GuestButton
