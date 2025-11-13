@@ -1,4 +1,4 @@
-import { View, StyleSheet, FlatList } from 'react-native'
+import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import { router, useNavigation } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
@@ -6,7 +6,7 @@ import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
 import MemoListItem from '../../components/MemoListItem'
 import CircleButton from '../../components/CircleButton'
 import Icon from '../../components/Icon'
-import LogOutButton from '../../components/LogOutButton'
+import SideMenu from '../../components/SideMenu'
 import { db, auth } from '../../config'
 import { type Memo } from '../../../types/memo'
 
@@ -17,9 +17,16 @@ const handlePress = (): void => {
 const List = () => {
     const [memos, setMemos] = useState<Memo[]>([])
     const navigation = useNavigation()
+    const [isSideMenuVisible, setIsSideMenuVisible] = useState(false)
     useEffect(() => {
         navigation.setOptions({
-            headerRight: () => { return <LogOutButton /> }
+            headerRight: () => {
+                return (
+                    <TouchableOpacity onPress={() => setIsSideMenuVisible(true)} style={{ paddingLeft: 6 }}>
+                        <Icon name='feather-menu' size={24} color='#333' />
+                    </TouchableOpacity>
+                )
+            }
         })
     }, [])
     useEffect(() => {
@@ -49,6 +56,11 @@ const List = () => {
             <CircleButton onPress={handlePress}>
                 <Icon name='plus' size={40} color='#FFF' />
             </CircleButton>
+
+            <SideMenu
+                visible={isSideMenuVisible}
+                onClose={() => setIsSideMenuVisible(false)}
+            />
         </View>
     )
 }
