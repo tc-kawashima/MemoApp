@@ -176,7 +176,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#D9534F',
         borderRadius: 4,
         paddingVertical: 15,
-        width: '100%'
+        width: '100%',
+        marginBottom: 8
     },
     deleteButtonText: {
         fontSize: 18,

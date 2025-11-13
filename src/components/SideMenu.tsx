@@ -152,7 +152,7 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.menuItem} onPress={handleDeleteAccount}>
-                        <Text style={[styles.menuItemText, { color: '#FF0000' }]}>アカウント削除</Text>
+                        <Text style={[styles.menuItemText, { color: '#D9534F' }]}>アカウント削除</Text>
                     </TouchableOpacity>
 
                 </Animated.View>

@@ -42,7 +42,7 @@ const LogIn = () => {
     return (
         <View style={styles.container}>
             <View style={styles.inner}>
-                <Text style={styles.title}>Log In</Text>
+                <Text style={styles.title}>ログイン</Text>
                 <TextInput
                     style={styles.input}
                     value={email}
@@ -61,17 +61,17 @@ const LogIn = () => {
                     placeholder='Password'
                     textContentType='password'
                 />
-                <Button label='Submit' onPress={() => { handlePress(email, password) }} />
+                <Button label='送信' onPress={() => { handlePress(email, password) }} />
                 <View style={styles.footer}>
-                    <Text style={styles.footerText}>Not registered?</Text>
+                    <Text style={styles.footerText}>アカウントをお持ちでないですか？</Text>
                     <Link href='/auth/sign_up' asChild replace>
                         <TouchableOpacity>
-                            <Text style={styles.footerLink}>Sign up here!</Text>
+                            <Text style={styles.footerLink}>新規登録はこちら</Text>
                         </TouchableOpacity>
                     </Link>
                 </View>
                 <View style={styles.separator} />
-                <GuestButton label="Log in as a Guest" onPress={ handleGuestLogin } />
+                <GuestButton label="ゲストとしてログイン" onPress={ handleGuestLogin } />
             </View>
         </View>
     )

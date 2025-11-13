@@ -31,7 +31,7 @@ const SignUp = () => {
     return (
         <View style={styles.container}>
             <View style={styles.inner}>
-                <Text style={styles.title}>Sing Up</Text>
+                <Text style={styles.title}>新規登録</Text>
                 <TextInput
                     style={styles.input}
                     value={email}
@@ -50,12 +50,12 @@ const SignUp = () => {
                     placeholder='Password'
                     textContentType='password'
                 />
-                <Button label='Submit' onPress={() => { handlePress(email, password) }} />
+                <Button label='登録' onPress={() => { handlePress(email, password) }} />
                 <View style={styles.footer}>
-                    <Text style={styles.footerText}>Already Registered?</Text>
+                    <Text style={styles.footerText}>すでにアカウントをお持ちですか？</Text>
                     <Link href='/auth/log_in' asChild replace>
                         <TouchableOpacity>
-                            <Text style={styles.footerLink}>Log in.</Text>
+                            <Text style={styles.footerLink}>ログインはこちら</Text>
                         </TouchableOpacity>
                     </Link>
                 </View>
