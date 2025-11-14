@@ -9,6 +9,8 @@ import KeyboardAvoidingView from '../../components/KeyboardAvoidingView'
 import CircleButton from '../../components/CircleButton'
 import Icon from '../../components/Icon'
 import { auth, db } from '../../config'
+import { useThemedStyles } from '../../hooks/useThemedStyles'
+import { ThemeColors } from '../../themes/colors'
 
 const handlePress = (id: string, bodyText: string): void => {
     if (auth.currentUser === null) { return }
@@ -27,6 +29,7 @@ const handlePress = (id: string, bodyText: string): void => {
 }
 
 const Edit = () => {
+    const { theme, styles } = useThemedStyles(createStyles)
     const id = String(useLocalSearchParams().id)
     const [bodyText, setBodyText] = useState('')
     useEffect(() => {
@@ -46,25 +49,27 @@ const Edit = () => {
             <View style={styles.inputContainer}>
                 <TextInput
                     multiline
-                    style={styles.input}
                     value={bodyText}
                     onChangeText={(text) => { setBodyText(text) }}
                     autoFocus
+                    style={[styles.input, { color: theme.text }]}
                 />
             </View>
-            <CircleButton onPress={() => { handlePress(id, bodyText) }}>
+            <CircleButton onPress={() => { handlePress(id, bodyText) }} style={{ backgroundColor: theme.primary }}>
                 <Icon name='check' size={40} color='#FFF' />
             </CircleButton>
         </KeyboardAvoidingView>
     )
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ThemeColors) => StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: theme.background
     },
     inputContainer: {
-        flex: 1
+        flex: 1,
+        backgroundColor: theme.background
     },
     input: {
         flex: 1,

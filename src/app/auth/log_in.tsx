@@ -10,6 +10,8 @@ import { signInWithEmailAndPassword, signInAnonymously } from 'firebase/auth'
 import Button from '../../components/Button'
 import GuestButton from '../../components/GuestButton'
 import { auth } from '../../config'
+import { useThemedStyles } from '../../hooks/useThemedStyles'
+import { ThemeColors } from '../../themes/colors'
 
 const handlePress = (email: string, password: string): void => {
     // ログイン
@@ -30,13 +32,14 @@ const handleGuestLogin = async () => {
         console.log('Guest Logged in with uid:', userCredential.user.uid)
         router.replace('/memo/list')
     }
-    catch(error) {
+    catch (error) {
         console.error('Guest login failed:', error)
         Alert.alert('ゲストログインに失敗しました')
     }
 }
 
 const LogIn = () => {
+    const { theme, styles } = useThemedStyles(createStyles)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     return (
@@ -61,23 +64,23 @@ const LogIn = () => {
                     placeholder='Password'
                     textContentType='password'
                 />
-                <Button label='送信' onPress={() => { handlePress(email, password) }} />
+                <Button label='送信' onPress={() => { handlePress(email, password) }} style={{ backgroundColor: theme.primary }} />
                 <View style={styles.footer}>
-                    <Text style={styles.footerText}>アカウントをお持ちでないですか？</Text>
+                    <Text style={[styles.footerText, { color: theme.text }]}>アカウントをお持ちでないですか？</Text>
                     <Link href='/auth/sign_up' asChild replace>
                         <TouchableOpacity>
-                            <Text style={styles.footerLink}>新規登録はこちら</Text>
+                            <Text style={[styles.footerLink, { color: theme.primary }]}>新規登録はこちら</Text>
                         </TouchableOpacity>
                     </Link>
                 </View>
                 <View style={styles.separator} />
-                <GuestButton label="ゲストとしてログイン" onPress={ handleGuestLogin } />
+                <GuestButton label="ゲストとしてログイン" onPress={handleGuestLogin} style={{ backgroundColor: theme.secondary }} />
             </View>
         </View>
     )
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ThemeColors) => StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#F0F4F8'
@@ -90,8 +93,8 @@ const styles = StyleSheet.create({
         fontSize: 24,
         lineHeight: 32,
         fontWeight: 'bold',
-        marginBottom: 24
-
+        marginBottom: 24,
+        color: theme.text
     },
     input: {
         backgroundColor: '#FFF',

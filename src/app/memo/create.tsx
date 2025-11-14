@@ -9,6 +9,8 @@ import KeyboardAvoidingView from '../../components/KeyboardAvoidingView'
 import CircleButton from '../../components/CircleButton'
 import Icon from '../../components/Icon'
 import { db, auth } from '../../config'
+import { useThemedStyles } from '../../hooks/useThemedStyles'
+import { ThemeColors } from '../../themes/colors'
 
 const handlePress = (bodyText: string): void => {
     if (auth.currentUser === null) { return }
@@ -27,6 +29,7 @@ const handlePress = (bodyText: string): void => {
 }
 
 const Create = () => {
+    const { theme, styles } = useThemedStyles(createStyles)
     const [bodyText, setBodyText] = useState('')
     return (
         <KeyboardAvoidingView style={styles.container}>
@@ -37,29 +40,33 @@ const Create = () => {
                     value={bodyText}
                     onChangeText={(text) => { setBodyText(text) }}
                     autoFocus
+                    placeholderTextColor={theme.text + '99'}
                 />
             </View>
-            <CircleButton onPress={() => { handlePress(bodyText) }}>
+            <CircleButton onPress={() => { handlePress(bodyText) }} style={{ backgroundColor: theme.primary }}>
                 <Icon name='check' size={40} color='#FFF' />
             </CircleButton>
         </KeyboardAvoidingView>
     )
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ThemeColors) => StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: theme.background
     },
     inputContainer: {
         paddingVertical: 32,
         paddingHorizontal: 27,
-        flex: 1
+        flex: 1,
+        backgroundColor: theme.background
     },
     input: {
         flex: 1,
         textAlignVertical: 'top',
         fontSize: 16,
-        lineHeight: 24
+        lineHeight: 24,
+        color: theme.text
     }
 })
 

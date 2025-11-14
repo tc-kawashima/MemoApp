@@ -7,12 +7,16 @@ import CircleButton from '../../components/CircleButton'
 import Icon from '../../components/Icon'
 import { auth, db } from '../../config'
 import { type Memo } from '../../../types/memo'
+import { useThemedStyles } from '../../hooks/useThemedStyles'
+import { ThemeColors } from '../../themes/colors'
+
 
 const handlePress = (id: string): void => {
-    router.push({ pathname: '/memo/edit', params: { id }})
+    router.push({ pathname: '/memo/edit', params: { id } })
 }
 
 const Detail = () => {
+    const { styles } = useThemedStyles(createStyles)
     const id = String(useLocalSearchParams().id)
     console.log(id)
     const [memo, setMemo] = useState<Memo | null>(null)
@@ -40,44 +44,50 @@ const Detail = () => {
                     {memo?.bodyText}
                 </Text>
             </ScrollView>
-            <CircleButton onPress={() => { handlePress(id) }} style={{ top: 60, bottom: 'auto' }}>
+            <CircleButton onPress={() => { handlePress(id) }} style={styles.circleButton}>
                 <Icon name='pencil' size={40} color='#FFF' />
             </CircleButton>
         </View>
     )
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ThemeColors) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFF'
+        backgroundColor: theme.background
     },
     memoHeader: {
-        backgroundColor: '#1D428A',
+        backgroundColor: theme.primary,
         height: 96,
         justifyContent: 'center',
         paddingVertical: 24,
         paddingHorizontal: 19
     },
     memoTitle: {
-        color: '#FFF',
+        color: theme.text,
         fontSize: 20,
         lineHeight: 32,
         fontWeight: 'bold'
     },
     memoDate: {
-        color: '#FFF',
+        color: theme.text,
         fontSize: 12,
         lineHeight: 16
     },
     memoBody: {
-        paddingHorizontal: 27
+        paddingHorizontal: 27,
+        backgroundColor: theme.background
     },
     memoBodyText: {
         paddingVertical: 32,
         fontSize: 16,
         lineHeight: 24,
-        color: '#000'
+        color: theme.text
+    },
+    circleButton: {
+        backgroundColor: theme.secondary, // テーマ適用
+        top: 60,
+        bottom: 'auto'
     }
 })
 

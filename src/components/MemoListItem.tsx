@@ -7,6 +7,8 @@ import Swipeable from 'react-native-gesture-handler/Swipeable'
 import Icon from './Icon'
 import { type Memo } from '../../types/memo'
 import { auth, db } from '../config'
+import { useThemedStyles } from '../hooks/useThemedStyles'
+import { ThemeColors } from '../themes/colors'
 
 interface Props {
     memo: Memo
@@ -33,10 +35,20 @@ const handlePress = (id: string): void => {
     ])
 }
 
+const STATIC_STYLES = StyleSheet.create({
+    deleteAction: {
+        backgroundColor: '#D9534F',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 80,
+        height: '100%'
+    }
+})
+
 const renderRightActions = (memoId: string) => {
     return (
         <TouchableOpacity
-            style={styles.deleteAction}
+            style={STATIC_STYLES.deleteAction} // ★ 修正: STATIC_STYLES を参照 ★
             onPress={() => handlePress(memoId)}
         >
             <Icon name='delete' size={24} color='#FFF' />
@@ -45,6 +57,7 @@ const renderRightActions = (memoId: string) => {
 }
 
 const MemoListItem = React.forwardRef((props: Props, ref: React.Ref<Swipeable>) => {
+    const { styles } = useThemedStyles(createStyles)
     const { memo, onSwipeableOpen, onCloseSwipeable, isAnySwipeableOpen } = props
     const { bodyText, updatedAt } = memo
     if (bodyText === null || updatedAt === null) { return null }
@@ -86,32 +99,27 @@ const MemoListItem = React.forwardRef((props: Props, ref: React.Ref<Swipeable>) 
 
 MemoListItem.displayName = 'MemoListItem'
 
-const styles = StyleSheet.create({
-    deleteAction: {
-        backgroundColor: '#D9534F', // 赤色
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: 80, // ボタンの幅
-        height: '100%'
-    },
+const createStyles = (theme: ThemeColors) => StyleSheet.create({
     memoListItem: {
-        backgroundColor: '#FFF',
+        backgroundColor: theme.listItemBackground,
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingVertical: 16,
         paddingHorizontal: 19,
         alignItems: 'center',
         borderBottomWidth: 1,
-        borderColor: 'rgba(0,0,0,0.15)'
+        borderColor: theme.listItemSeparator
     },
     memoListItemTitle: {
         fontSize: 16,
-        lineHeight: 32
+        lineHeight: 32,
+        color: theme.text
     },
     memoListItemDate: {
         fontSize: 12,
         lineHeight: 16,
-        color: '#444'
+        color: theme.text,
+        opacity: 0.7
     }
 })
 

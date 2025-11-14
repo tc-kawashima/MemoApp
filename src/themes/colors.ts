@@ -10,9 +10,9 @@ export interface ThemeColors {
 // 1. デフォルトテーマ
 export const DEFAULT_THEME: ThemeColors = {
   primary: '#1D428A',
-  secondary: '#3366CC',
+  secondary: '#888',
   background: '#F0F4F8',
-  text: '#333333',
+  text: '#000',
   listItemBackground: '#FFFFFF',
   listItemSeparator: 'rgba(0,0,0,0.15)'
 }
@@ -20,7 +20,7 @@ export const DEFAULT_THEME: ThemeColors = {
 // 2. モノクロテーマ
 export const MONOCHROME_THEME: ThemeColors = {
   primary: '#555555',
-  secondary: '#AAAAAA',
+  secondary: '#888',
   background: '#FFFFFF',
   text: '#222222',
   listItemBackground: '#F7F7F7',
@@ -30,7 +30,7 @@ export const MONOCHROME_THEME: ThemeColors = {
 // 3. ダークテーマ
 export const DARK_THEME: ThemeColors = {
   primary: '#1A202C',
-  secondary: '#4A90E2',
+  secondary: '#888',
   background: '#000000',
   text: '#F7FAFC',
   listItemBackground: '#171923',
@@ -40,7 +40,7 @@ export const DARK_THEME: ThemeColors = {
 // 4. イエローテーマ
 export const YELLOW_THEME: ThemeColors = {
   primary: '#FFA500',
-  secondary: '#FFD700',
+  secondary: '#888',
   background: '#FFFFE0',
   text: '#555555',
   listItemBackground: '#FFFFFF',

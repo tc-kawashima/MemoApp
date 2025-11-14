@@ -9,6 +9,8 @@ import { createUserWithEmailAndPassword } from 'firebase/auth'
 
 import Button from '../../components/Button'
 import { auth } from '../../config'
+import { useThemedStyles } from '../../hooks/useThemedStyles'
+import { ThemeColors } from '../../themes/colors'
 
 const handlePress = (email: string, password: string): void => {
     // 会員登録
@@ -26,6 +28,7 @@ const handlePress = (email: string, password: string): void => {
 }
 
 const SignUp = () => {
+    const { theme, styles } = useThemedStyles(createStyles)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     return (
@@ -50,12 +53,12 @@ const SignUp = () => {
                     placeholder='Password'
                     textContentType='password'
                 />
-                <Button label='登録' onPress={() => { handlePress(email, password) }} />
+                <Button label='登録' onPress={() => { handlePress(email, password) }} style={{ backgroundColor: theme.primary }} />
                 <View style={styles.footer}>
-                    <Text style={styles.footerText}>すでにアカウントをお持ちですか？</Text>
+                    <Text style={[styles.footerText, { color: theme.text }]}>すでにアカウントをお持ちですか？</Text>
                     <Link href='/auth/log_in' asChild replace>
                         <TouchableOpacity>
-                            <Text style={styles.footerLink}>ログインはこちら</Text>
+                            <Text style={[styles.footerLink, { color: theme.primary }]}>ログインはこちら</Text>
                         </TouchableOpacity>
                     </Link>
                 </View>
@@ -64,10 +67,10 @@ const SignUp = () => {
     )
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ThemeColors) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F0F4F8'
+        backgroundColor: theme.background
     },
     inner: {
         paddingVertical: 24,
@@ -77,8 +80,8 @@ const styles = StyleSheet.create({
         fontSize: 24,
         lineHeight: 32,
         fontWeight: 'bold',
-        marginBottom: 24
-
+        marginBottom: 24,
+        color: theme.text
     },
     input: {
         backgroundColor: '#FFF',

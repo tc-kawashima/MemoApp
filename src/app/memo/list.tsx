@@ -10,12 +10,16 @@ import Icon from '../../components/Icon'
 import SideMenu from '../../components/SideMenu'
 import { db, auth } from '../../config'
 import { type Memo } from '../../../types/memo'
+import { useThemedStyles } from '../../hooks/useThemedStyles'
+import { ThemeColors } from '../../themes/colors'
 
 const handlePress = (): void => {
     router.push('/memo/create')
 }
 
 const List = () => {
+    const { theme } = useThemedStyles(createStyles)
+    const dynamicStyles = createStyles(theme)
     const [memos, setMemos] = useState<Memo[]>([])
     const navigation = useNavigation()
     const [isSideMenuVisible, setIsSideMenuVisible] = useState(false)
@@ -64,13 +68,13 @@ const List = () => {
         return unsubscribe
     }, [])
     return (
-        <View style={styles.container}>
+        <View style={dynamicStyles.container}>
             <FlatList
                 data={memos}
                 renderItem={({ item }) => (
                     <MemoListItem
                         key={item.id}
-                        ref={ref => { itemRefs.current[item.id] = ref as Swipeable }}
+                        ref={(ref) => { itemRefs.current[item.id] = ref as Swipeable | null }}
                         memo={item}
                         onSwipeableOpen={handleSwipeableOpen}
                         onCloseSwipeable={closeOpenedSwipeable}
@@ -79,7 +83,8 @@ const List = () => {
                 )}
                 keyExtractor={(item) => item.id}
             />
-            <CircleButton onPress={handlePress}>
+
+            <CircleButton onPress={handlePress} style={{ backgroundColor: theme.primary }}>
                 <Icon name='plus' size={40} color='#FFF' />
             </CircleButton>
 
@@ -91,10 +96,10 @@ const List = () => {
     )
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ThemeColors) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFF'
+        backgroundColor: theme.background
     }
 })
 
