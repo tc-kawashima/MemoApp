@@ -1,24 +1,43 @@
 import { Stack } from 'expo-router'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { ThemeProvider } from '../context/ThemeContext'
+import { useTheme } from '../context/ThemeContext'
+
+const RootStack = () => {
+    const { theme } = useTheme()
+    return (
+        <Stack
+            screenOptions={{
+                // テーマカラーの適用
+                headerStyle: {
+                    backgroundColor: theme.primary
+                },
+                headerTintColor: theme.text,
+                headerTitle: 'Memo App',
+                headerTitleStyle: {
+                    fontSize: 22,
+                    fontWeight: 'bold',
+                    color: theme.text
+                },
+                headerBackTitle: '',
+                headerBackButtonDisplayMode: 'minimal'
+            }}
+        >
+            <Stack.Screen name="memo/list" />
+            <Stack.Screen name="memo/detail" />
+            <Stack.Screen name="memo/edit" />
+            <Stack.Screen name="memo/create" />
+        </Stack>
+    )
+}
+
 
 const Layout = () => {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
-            <Stack
-                screenOptions={{
-                    headerStyle: {
-                        backgroundColor: '#1D428A'
-                    },
-                    headerTintColor: '#FFF',
-                    headerTitle: 'Memo App',
-                    headerTitleStyle: {
-                        fontSize: 22,
-                        fontWeight: 'bold'
-                    },
-                    headerBackButtonDisplayMode: 'minimal'
-                }}
-            >
-            </Stack>
+            <ThemeProvider>
+                <RootStack />
+            </ThemeProvider>
         </GestureHandlerRootView>
     )
 }

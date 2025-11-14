@@ -5,8 +5,17 @@ import {
 } from 'react-native'
 import { router } from 'expo-router'
 import { auth } from '../config'
+import { useTheme, ThemeName } from '../context/ThemeContext'
 
-const { width, height } = Dimensions.get('window') // 画面の幅と高さを取得
+const { width, height } = Dimensions.get('window')
+const THEME_OPTIONS: { name: string, value: ThemeName }[] = [
+    { name: 'デフォルト', value: 'default' },
+    { name: 'モノクロ', value: 'monochrome' },
+    { name: 'ダークモード', value: 'dark' },
+    { name: 'イエロー', value: 'yellow' }
+]
+
+type MenuState = 'main' | 'theme_selection'
 
 interface SideMenuProps {
     visible: boolean;
@@ -18,9 +27,20 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
     const scaleAnim = useRef(new Animated.Value(0)).current
     // フェードアニメーション用の値 (0: 透明, 1: 不透明)
     const fadeAnim = useRef(new Animated.Value(0)).current
-
     // ユーザーの状態を管理（リアルタイムで isAnonymous を判定）
     const [isAnonymous, setIsAnonymous] = useState(auth.currentUser?.isAnonymous ?? false)
+    // useTheme からテーマ状態と切り替え関数を取得 ★
+    const { themeName, setThemeName, theme } = useTheme()
+    const [currentView, setCurrentView] = useState<MenuState>('main')
+    const handleBackToMain = () => {
+        setCurrentView('main')
+    }
+    const handleGoToThemes = () => {
+        setCurrentView('theme_selection')
+    }
+    const handleThemeChange = (newTheme: ThemeName) => {
+        setThemeName(newTheme)
+    }
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
@@ -32,6 +52,7 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
     // visible の変更に応じてアニメーションを実行
     useEffect(() => {
         if (visible) {
+            setCurrentView('main')
             // 表示時にはフェードイン＆スケールアップ
             Animated.parallel([
                 Animated.timing(fadeAnim, {
@@ -141,20 +162,50 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
                         </TouchableOpacity>
                     </View>
 
-                    {isAnonymous && (
-                        <TouchableOpacity style={styles.menuItem} onPress={handleLinkAccount}>
-                            <Text style={styles.menuItemText}>アカウント連携</Text>
-                        </TouchableOpacity>
+                    {currentView === 'main' && (
+                        <View>
+                            <TouchableOpacity style={styles.menuItem} onPress={handleGoToThemes}>
+                                <Text style={styles.menuItemText}>カラーテーマ設定</Text>
+                            </TouchableOpacity>
+                            {isAnonymous && (
+                                <TouchableOpacity style={styles.menuItem} onPress={handleLinkAccount}>
+                                    <Text style={styles.menuItemText}>アカウント連携</Text>
+                                </TouchableOpacity>
+                            )}
+                            <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
+                                <Text style={styles.menuItemText}>ログアウト</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.menuItem} onPress={handleDeleteAccount}>
+                                <Text style={[styles.menuItemText, { color: '#D9534F' }]}>アカウント削除</Text>
+                            </TouchableOpacity>
+                        </View>
                     )}
 
-                    <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
-                        <Text style={styles.menuItemText}>ログアウト</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.menuItem} onPress={handleDeleteAccount}>
-                        <Text style={[styles.menuItemText, { color: '#D9534F' }]}>アカウント削除</Text>
-                    </TouchableOpacity>
-
+                    {currentView === 'theme_selection' && (
+                        <View style={styles.themeOptionsContainer}>
+                            {THEME_OPTIONS.map(option => (
+                                <TouchableOpacity
+                                    key={option.value}
+                                    style={[
+                                        styles.themeOptionItem,
+                                        themeName === option.value && {
+                                            backgroundColor: theme.primary + '1A',
+                                            borderColor: theme.primary
+                                        }
+                                    ]}
+                                    onPress={() => handleThemeChange(option.value)}
+                                >
+                                    <Text style={[styles.menuItemText, { color: theme.text }]}>{option.name}</Text>
+                                </TouchableOpacity>
+                            ))}
+                            <View>
+                                <TouchableOpacity style={styles.backButton} onPress={handleBackToMain}>
+                                    <Text style={styles.backButtonText}>＜ 戻る</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    )}
                 </Animated.View>
             </TouchableOpacity>
         </Modal>
@@ -214,6 +265,44 @@ const styles = StyleSheet.create({
     menuItemText: {
         fontSize: 16,
         color: '#333'
+    },
+    sectionHeader: {
+        marginTop: 30,
+        marginBottom: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#CCC',
+        paddingBottom: 5
+    },
+    sectionTitle: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: '#666'
+    },
+    menuItemSelected: {
+        backgroundColor: 'rgba(29, 66, 138, 0.1)',
+        borderWidth: 1,
+        borderColor: '#1D428A'
+    },
+    themeOptionItem: {
+        paddingVertical: 10,
+        borderBottomWidth: 0,
+        borderRadius: 4,
+        alignSelf: 'center',
+        width: '90%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 8
+    },
+    backButton: {
+        alignSelf: "flex-end",
+        marginRight: 16
+    },
+    backButtonText: {
+        fontSize: 16,
+        color: '#333'
+    },
+    themeOptionsContainer: {
+
     }
 })
 
