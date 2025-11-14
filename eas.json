@@ -1,0 +1,23 @@
+{
+    "build": {
+        "production": {
+            "env": {
+                "EXPO_PUBLIC_FB_API_KEY": "AIzaSyD5YStaBx4npdK9UFqFHzOWfJAp81qks4E",
+                "EXPO_PUBLIC_FBAUTH_DOMAIN": "memoapp-tc.firebaseapp.com",
+                "EXPO_PUBLIC_FBPROJECT_IDm": "emoapp-tc",
+                "EXPO_PUBLIC_FBSTORAGE_BUCKET": "memoapp-tc.firebasestorage.app",
+                "EXPO_PUBLIC_FB_MESSAGEING_SENDER_ID": "474124074060",
+                "EXPO_PUBLIC_FB_APP_ID": "1:474124074060:web:4661a73f20ef790ab448e9"
+            }
+        },
+        "prebiew": {
+            "extends": "production",
+            "ios": {
+                "simulator": true
+            },
+            "android": {
+                "buildType": "apk"
+            }
+        }
+    }
+}
