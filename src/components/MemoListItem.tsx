@@ -1,5 +1,6 @@
+import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native'
-import { Link } from 'expo-router'
+import { router } from 'expo-router'
 import { deleteDoc, doc } from 'firebase/firestore'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 
@@ -9,6 +10,9 @@ import { auth, db } from '../config'
 
 interface Props {
     memo: Memo
+    onSwipeableOpen: (id: string) => void
+    onCloseSwipeable: () => void
+    isAnySwipeableOpen: boolean
 }
 
 const handlePress = (id: string): void => {
@@ -40,30 +44,39 @@ const renderRightActions = (memoId: string) => {
     )
 }
 
-const MemoListItem = (props: Props) => {
-    const { memo } = props
+const MemoListItem = React.forwardRef((props: Props, ref: React.Ref<Swipeable>) => {
+    const { memo, onSwipeableOpen, onCloseSwipeable, isAnySwipeableOpen } = props
     const { bodyText, updatedAt } = memo
     if (bodyText === null || updatedAt === null) { return null }
     const dateString = updatedAt.toDate().toLocaleString('ja-JP')
+    const handleDetailPress = () => {
+        if (isAnySwipeableOpen) {
+            onCloseSwipeable()
+            return
+        }
+        router.push({ pathname: '/memo/detail', params: { id: memo.id } })
+    }
+    const handleSwipeableOpen = () => {
+        onSwipeableOpen(memo.id)
+    }
     return (
         <Swipeable
+            ref={ref}
             renderRightActions={() => renderRightActions(memo.id)}
             rightThreshold={80}
+            onSwipeableOpen={handleSwipeableOpen}
         >
-                        <Link
-                href={{ pathname: '/memo/detail', params: { id: memo.id } }}
-                asChild
-            >
-            <TouchableOpacity style={styles.memoListItem}>
+            <TouchableOpacity onPress={handleDetailPress} style={styles.memoListItem}>
                 <View>
                     <Text numberOfLines={1} style={styles.memoListItemTitle}>{bodyText}</Text>
                     <Text style={styles.memoListItemDate}>{dateString}</Text>
                 </View>
             </TouchableOpacity>
-            </Link>
         </Swipeable>
     )
-}
+})
+
+MemoListItem.displayName = 'MemoListItem'
 
 const styles = StyleSheet.create({
     deleteAction: {
