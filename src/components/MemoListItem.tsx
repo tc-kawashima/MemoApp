@@ -48,7 +48,15 @@ const MemoListItem = React.forwardRef((props: Props, ref: React.Ref<Swipeable>) 
     const { memo, onSwipeableOpen, onCloseSwipeable, isAnySwipeableOpen } = props
     const { bodyText, updatedAt } = memo
     if (bodyText === null || updatedAt === null) { return null }
-    const dateString = updatedAt.toDate().toLocaleString('ja-JP')
+    const date = updatedAt.toDate()
+    const dateString = date.toLocaleDateString('ja-JP', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    }) + '  ' + date.toLocaleTimeString('ja-JP', {
+        hour: '2-digit',
+        minute: '2-digit'
+    })
     const handleDetailPress = () => {
         if (isAnySwipeableOpen) {
             onCloseSwipeable()
@@ -103,7 +111,7 @@ const styles = StyleSheet.create({
     memoListItemDate: {
         fontSize: 12,
         lineHeight: 16,
-        color: '#848484'
+        color: '#444'
     }
 })
 

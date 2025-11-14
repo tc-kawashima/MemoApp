@@ -15,11 +15,10 @@ const Layout = () => {
                         fontSize: 22,
                         fontWeight: 'bold'
                     },
-                    headerBackTitle: 'Back',
-                    headerBackTitleStyle: {
-                        fontSize: 16
-                    }
-                }} />
+                    headerBackButtonDisplayMode: 'minimal'
+                }}
+            >
+            </Stack>
         </GestureHandlerRootView>
     )
 }
