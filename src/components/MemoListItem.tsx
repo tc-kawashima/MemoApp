@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native'
 import { Link } from 'expo-router'
 import { deleteDoc, doc } from 'firebase/firestore'
+import Swipeable from 'react-native-gesture-handler/Swipeable'
 
 import Icon from './Icon'
 import { type Memo } from '../../types/memo'
@@ -28,30 +29,50 @@ const handlePress = (id: string): void => {
     ])
 }
 
+const renderRightActions = (memoId: string) => {
+    return (
+        <TouchableOpacity
+            style={styles.deleteAction}
+            onPress={() => handlePress(memoId)}
+        >
+            <Icon name='delete' size={24} color='#FFF' />
+        </TouchableOpacity>
+    )
+}
+
 const MemoListItem = (props: Props) => {
     const { memo } = props
     const { bodyText, updatedAt } = memo
     if (bodyText === null || updatedAt === null) { return null }
     const dateString = updatedAt.toDate().toLocaleString('ja-JP')
     return (
-        <Link
-            href={{ pathname: '/memo/detail', params: { id: memo.id } }}
-            asChild
+        <Swipeable
+            renderRightActions={() => renderRightActions(memo.id)}
+            rightThreshold={80}
         >
+                        <Link
+                href={{ pathname: '/memo/detail', params: { id: memo.id } }}
+                asChild
+            >
             <TouchableOpacity style={styles.memoListItem}>
                 <View>
                     <Text numberOfLines={1} style={styles.memoListItemTitle}>{bodyText}</Text>
                     <Text style={styles.memoListItemDate}>{dateString}</Text>
                 </View>
-                <TouchableOpacity onPress={() => { handlePress(memo.id) }}>
-                    <Icon name='delete' size={32} color='#B0B0B0' />
-                </TouchableOpacity>
             </TouchableOpacity>
-        </Link>
+            </Link>
+        </Swipeable>
     )
 }
 
 const styles = StyleSheet.create({
+    deleteAction: {
+        backgroundColor: '#D9534F', // 赤色
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 80, // ボタンの幅
+        height: '100%'
+    },
     memoListItem: {
         backgroundColor: '#FFF',
         flexDirection: 'row',
