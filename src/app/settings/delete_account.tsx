@@ -17,6 +17,8 @@ import {
     getDocs,
     writeBatch
 } from 'firebase/firestore'
+import { useThemedStyles } from '../../hooks/useThemedStyles'
+import { ThemeColors } from '../../themes/colors'
 
 // ------------------------------------------------
 // 1. ユーザーの全メモデータをFirestoreから削除する関数
@@ -115,6 +117,7 @@ const handleDeleteAccount = () => {
 // 4. UIコンポーネント
 // ------------------------------------------------
 const DeleteAccountScreen = () => {
+    const { styles } = useThemedStyles(createStyles)
     return (
         <View style={styles.container}>
             <View style={styles.inner}>
@@ -144,13 +147,25 @@ const DeleteAccountScreen = () => {
     )
 }
 
-const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#F0F4F8', padding: 27 },
-    inner: { alignItems: 'center', paddingTop: 30 },
-    warningTitle: { fontSize: 24, fontWeight: 'bold', color: '#D9534F', marginBottom: 15 },
+const createStyles = (theme: ThemeColors) => StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: theme.background,
+        padding: 27
+    },
+    inner: {
+        alignItems: 'center',
+        paddingTop: 30
+    },
+    warningTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#D9534F',
+        marginBottom: 15
+    },
     warningText: {
         fontSize: 16,
-        color: '#333',
+        color: theme.text,
         textAlign: 'center',
         marginBottom: 40,
         lineHeight: 24,
@@ -164,11 +179,12 @@ const styles = StyleSheet.create({
     cancelButton: {
         backgroundColor: 'transparent',
         borderRadius: 4,
-        paddingVertical: 10
+        paddingVertical: 10,
+        borderColor: theme.primary
     },
     cancelButtonText: {
         fontSize: 16,
-        color: '#222',
+        color: theme.text,
         textAlign: 'center',
         fontWeight: 'bold'
     },

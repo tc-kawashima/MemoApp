@@ -64,12 +64,12 @@ const LogIn = () => {
                     placeholder='Password'
                     textContentType='password'
                 />
-                <Button label='送信' onPress={() => { handlePress(email, password) }} style={{ backgroundColor: theme.primary }} />
+                <Button label='送信' onPress={() => { handlePress(email, password) }} style={{ backgroundColor: '#1D428A' }} />
                 <View style={styles.footer}>
                     <Text style={[styles.footerText, { color: theme.text }]}>アカウントをお持ちでないですか？</Text>
                     <Link href='/auth/sign_up' asChild replace>
                         <TouchableOpacity>
-                            <Text style={[styles.footerLink, { color: theme.primary }]}>新規登録はこちら</Text>
+                            <Text style={[styles.footerLink, { color: '#1D428A' }]}>新規登録はこちら</Text>
                         </TouchableOpacity>
                     </Link>
                 </View>
@@ -83,7 +83,7 @@ const LogIn = () => {
 const createStyles = (theme: ThemeColors) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F0F4F8'
+        backgroundColor: theme.background
     },
     inner: {
         paddingVertical: 24,

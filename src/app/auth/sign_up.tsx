@@ -53,12 +53,12 @@ const SignUp = () => {
                     placeholder='Password'
                     textContentType='password'
                 />
-                <Button label='登録' onPress={() => { handlePress(email, password) }} style={{ backgroundColor: theme.primary }} />
+                <Button label='登録' onPress={() => { handlePress(email, password) }} style={{ backgroundColor: '#1D428A' }} />
                 <View style={styles.footer}>
                     <Text style={[styles.footerText, { color: theme.text }]}>すでにアカウントをお持ちですか？</Text>
                     <Link href='/auth/log_in' asChild replace>
                         <TouchableOpacity>
-                            <Text style={[styles.footerLink, { color: theme.primary }]}>ログインはこちら</Text>
+                            <Text style={[styles.footerLink, { color: '#1D428A' }]}>ログインはこちら</Text>
                         </TouchableOpacity>
                     </Link>
                 </View>

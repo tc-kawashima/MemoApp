@@ -1,17 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {
     View, Text, StyleSheet, TouchableOpacity, Animated,
-    Dimensions, Alert, Modal
+    Dimensions, Alert, Modal, StyleProp, ViewStyle, TextStyle
 } from 'react-native'
 import { router } from 'expo-router'
 import { auth } from '../config'
-import { useTheme, ThemeName } from '../context/ThemeContext'
+import { useTheme, ThemeName} from '../context/ThemeContext'
+import { ThemeColors } from '../themes/colors'
 
 const { width, height } = Dimensions.get('window')
 const THEME_OPTIONS: { name: string, value: ThemeName }[] = [
     { name: 'デフォルト', value: 'default' },
     { name: 'モノクロ', value: 'monochrome' },
-    { name: 'ダークモード', value: 'dark' },
+    { name: 'ダーク', value: 'dark' },
     { name: 'イエロー', value: 'yellow' }
 ]
 
@@ -32,6 +33,7 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
     // useTheme からテーマ状態と切り替え関数を取得 ★
     const { themeName, setThemeName, theme } = useTheme()
     const [currentView, setCurrentView] = useState<MenuState>('main')
+    const styles = createStyles(theme)
     const handleBackToMain = () => {
         setCurrentView('main')
     }
@@ -141,7 +143,7 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
         >
             {/* 1. オーバーレイ (画面全体を覆う半透明な背景) */}
             <TouchableOpacity
-                style={styles.overlay}
+                style={[styles.overlay, { backgroundColor: theme.background + '99' } as StyleProp<ViewStyle>]}
                 activeOpacity={1}
                 onPress={onClose} // オーバーレイタップで閉じる
             >
@@ -151,14 +153,15 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
                         styles.menuContainer,
                         {
                             opacity: fadeAnim, // フェードアニメーション
-                            transform: [{ scale: scaleAnim }] // スケールアニメーション
+                            transform: [{ scale: scaleAnim }], // スケールアニメーション
+                            backgroundColor: theme.listItemBackground
                         }
                     ]}
                 >
                     <View style={styles.menuHeader}>
                         <Text style={styles.menuTitle}>Menu</Text>
                         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                            <Text style={styles.closeButtonText}>✕</Text>
+                            <Text style={[styles.closeButtonText, { color: theme.text }]}>✕</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -177,7 +180,7 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
                             </TouchableOpacity>
 
                             <TouchableOpacity style={styles.menuItem} onPress={handleDeleteAccount}>
-                                <Text style={[styles.menuItemText, { color: '#D9534F' }]}>アカウント削除</Text>
+                                <Text style={[styles.menuItemText, { color: '#D9534F' } as StyleProp<TextStyle>]}>アカウント削除</Text>
                             </TouchableOpacity>
                         </View>
                     )}
@@ -196,10 +199,10 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
                                     ]}
                                     onPress={() => handleThemeChange(option.value)}
                                 >
-                                    <Text style={[styles.menuItemText, { color: theme.text }]}>{option.name}</Text>
+                                    <Text style={[styles.menuItemText, { color: styles.menuItemText.color }]}>{option.name}</Text>
                                 </TouchableOpacity>
                             ))}
-                            <View>
+                            <View style={styles.backButtonContainer}>
                                 <TouchableOpacity style={styles.backButton} onPress={handleBackToMain}>
                                     <Text style={styles.backButtonText}>＜ 戻る</Text>
                                 </TouchableOpacity>
@@ -212,20 +215,18 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
     )
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ThemeColors) => StyleSheet.create({
     overlay: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.5)', // 半透明の黒背景
         justifyContent: 'center', // 中央寄せ
         alignItems: 'center'     // 中央寄せ
     },
     menuContainer: {
         width: width * 0.8,
-        backgroundColor: '#FFF',
         borderRadius: 15,
         padding: 20,
         maxHeight: height * 0.7,
-        shadowColor: '#000',
+        shadowColor: theme.text === '#F7FAFC' ? '#FFF' : '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
@@ -237,23 +238,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 20,
         borderBottomWidth: 1,
-        borderBottomColor: '#888',
+        borderBottomColor: theme.listItemSeparator,
         paddingBottom: 15
     },
     menuTitle: {
         fontSize: 20,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: theme.text
     },
     closeButton: {
         padding: 5
     },
     closeButtonText: {
-        fontSize: 24,
-        color: '#333'
+        fontSize: 24
     },
     menuItem: {
         paddingVertical: 12,
-        backgroundColor: 'rgba(29,66,138,0.15)',
+        backgroundColor: theme.primary + '1A',
         borderBottomWidth: 0,
         borderRadius: 4,
         alignSelf: 'center',
@@ -264,7 +265,7 @@ const styles = StyleSheet.create({
     },
     menuItemText: {
         fontSize: 16,
-        color: '#333'
+        color: theme.text
     },
     sectionHeader: {
         marginTop: 30,
@@ -276,7 +277,7 @@ const styles = StyleSheet.create({
     sectionTitle: {
         fontSize: 14,
         fontWeight: 'bold',
-        color: '#666'
+        color: theme.text
     },
     menuItemSelected: {
         backgroundColor: 'rgba(29, 66, 138, 0.1)',
@@ -285,7 +286,8 @@ const styles = StyleSheet.create({
     },
     themeOptionItem: {
         paddingVertical: 10,
-        borderBottomWidth: 0,
+        borderBottomWidth: 1,
+        borderColor: theme.listItemSeparator,
         borderRadius: 4,
         alignSelf: 'center',
         width: '90%',
@@ -293,13 +295,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 8
     },
+    backButtonContainer: {
+        // backButtonを囲むView
+        width: '100%',
+        marginTop: 16,
+        alignItems: 'flex-end' // ボタンを右に寄せる
+    },
     backButton: {
         alignSelf: "flex-end",
         marginRight: 16
     },
     backButtonText: {
         fontSize: 16,
-        color: '#333'
+        color: theme.text
     },
     themeOptionsContainer: {
 

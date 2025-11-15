@@ -85,7 +85,7 @@ const createStyles = (theme: ThemeColors) => StyleSheet.create({
         color: theme.text
     },
     circleButton: {
-        backgroundColor: theme.secondary, // テーマ適用
+        backgroundColor: theme.primary,
         top: 60,
         bottom: 'auto'
     }

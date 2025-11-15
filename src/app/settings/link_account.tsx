@@ -7,6 +7,8 @@ import { router } from 'expo-router'
 // Firebase Auth の必要な関数と型をインポート
 import { EmailAuthProvider, linkWithCredential } from 'firebase/auth'
 import { auth } from '../../config' // auth インスタンスをインポート
+import { useThemedStyles } from '../../hooks/useThemedStyles'
+import { ThemeColors } from '../../themes/colors'
 
 // ------------------------------------------------
 // アカウント連携（昇格）ロジック
@@ -67,6 +69,7 @@ const handleLinkAccount = async (email: string, password: string): Promise<void>
 const LinkAccount = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const { styles } = useThemedStyles(createStyles)
 
     return (
         <View style={styles.container}>
@@ -115,11 +118,27 @@ const LinkAccount = () => {
     )
 }
 
-const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#F0F4F8' },
-    inner: { paddingVertical: 32, paddingHorizontal: 27 },
-    title: { fontSize: 24, fontWeight: 'bold', marginBottom: 8 },
-    subtitle: { fontSize: 14, color: '#666', marginBottom: 24 },
+const createStyles = (theme: ThemeColors) => StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: theme.background,
+        padding: 27
+    },
+    inner: {
+        paddingVertical: 32,
+        paddingHorizontal: 27
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 8,
+        color: theme.text
+    },
+    subtitle: {
+        fontSize: 14,
+        color: theme.text,
+        marginBottom: 24
+    },
     input: {
         backgroundColor: '#FFF', borderWidth: 1, borderColor: '#DDD',
         height: 48, padding: 8, fontSize: 16, marginBottom: 16, borderRadius: 4
@@ -149,7 +168,7 @@ const styles = StyleSheet.create({
     },
     cancelButtonText: {
         fontSize: 16,
-        color: '#222',
+        color: theme.text,
         textAlign: 'center',
         fontWeight: 'bold'
     }

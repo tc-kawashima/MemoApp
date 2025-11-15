@@ -39,7 +39,7 @@ const KeyboardSafeView = ({ children, style }) => {
   }
 
   const handleHide = () => {
-    setViewHeight(initialViewHeight.current - 120)
+    setViewHeight(initialViewHeight.current - 110)
   }
 
   const handleLayout = ({ nativeEvent }) => {
