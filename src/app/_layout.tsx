@@ -8,7 +8,6 @@ const RootStack = () => {
     return (
         <Stack
             screenOptions={{
-                // テーマカラーの適用
                 headerStyle: {
                     backgroundColor: theme.primary
                 },

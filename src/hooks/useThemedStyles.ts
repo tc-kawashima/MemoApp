@@ -11,9 +11,7 @@ export const useThemedStyles = <T extends NamedStyles<T>>(
 ) => {
     const { theme } = useTheme()
 
-    // useMemo を使って、テーマが変更された時のみスタイルを再計算（パフォーマンス最適化）
     const styles = React.useMemo(() => {
-        // 受け取ったファクトリ関数に現在のテーマを渡してスタイルを生成
         return styleFactory(theme)
     }, [theme, styleFactory])
 

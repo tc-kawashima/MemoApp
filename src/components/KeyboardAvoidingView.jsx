@@ -20,8 +20,6 @@ const KeyboardSafeView = ({ children, style }) => {
 
   useEffect(() => {
     if ([initialViewHeight, animatedViewHeight, viewHeight].some((val) => val === null)) { return }
-    // height is not supported with useNativeDriver: true
-    // https://github.com/react-native-community/react-native-modal/issues/163
     if (viewHeight === initialViewHeight.current) {
       Animated.timing(animatedViewHeight.current,
         { toValue: initialViewHeight.current, duration: 300, useNativeDriver: false }).start()
@@ -45,8 +43,6 @@ const KeyboardSafeView = ({ children, style }) => {
   const handleLayout = ({ nativeEvent }) => {
     if (!initialViewHeight.current) {
       const { height } = nativeEvent.layout
-      // keep viewHeight as null not to trigger useEffect on mounting.
-      // Don't do this: setViewHeight(height);
       initialViewHeight.current = height
       animatedViewHeight.current = new Animated.Value(height)
     }

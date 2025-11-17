@@ -1,12 +1,10 @@
-// src/app/settings/delete_account.tsx
-
 import React from 'react'
 import { View, Text, Alert, StyleSheet, TouchableOpacity } from 'react-native'
 import { router } from 'expo-router'
 import {
     auth,
     db
-} from '../../config' // auth と db (Firestore) をインポート
+} from '../../config'
 import {
     deleteUser,
     User
@@ -20,11 +18,8 @@ import {
 import { useThemedStyles } from '../../hooks/useThemedStyles'
 import { ThemeColors } from '../../themes/colors'
 
-// ------------------------------------------------
 // 1. ユーザーの全メモデータをFirestoreから削除する関数
-// ------------------------------------------------
 const deleteUserMemos = async (uid: string) => {
-    // ユーザーのメモコレクションへの参照
     const userMemosRef = collection(db, `users/${uid}/memos`)
     const q = query(userMemosRef)
 
@@ -34,7 +29,6 @@ const deleteUserMemos = async (uid: string) => {
         return
     }
 
-    // バッチ処理を使用して全てのドキュメントを削除
     const batch = writeBatch(db)
     snapshot.forEach((memoDoc) => {
         batch.delete(memoDoc.ref)
@@ -45,37 +39,30 @@ const deleteUserMemos = async (uid: string) => {
 }
 
 
-// ------------------------------------------------
 // 2. 削除実行とエラー処理を行うメイン関数
-// ------------------------------------------------
 const performDeletion = async (user: User) => {
     try {
         const uid = user.uid
 
-        // ① Firestore: メモデータの削除
         await deleteUserMemos(uid)
 
-        // ② Firebase Auth: 認証アカウントの削除
         await deleteUser(user)
 
         Alert.alert('完了', 'アカウントと全てのデータが削除されました。')
-        router.replace('/auth/log_in') // ログイン画面へ遷移（履歴を置き換える）
+        router.replace('/auth/log_in')
 
     } catch (error: unknown) {
 
         console.error('Deletion failed:', error)
 
-        // Firebaseのエラーコードを安全に抽出
         if (typeof error === 'object' && error !== null && 'code' in error) {
             const firebaseError = error as { code: string, message: string }
 
-            // セキュリティエラー処理: 'auth/requires-recent-login'
             if (firebaseError.code === 'auth/requires-recent-login') {
                 Alert.alert(
                     '削除失敗',
                     'セキュリティのため、アカウント削除には再ログインが必要です。'
                 )
-                // ユーザーをログアウトさせ、再認証を促す
                 await auth.signOut()
                 router.replace('/auth/log_in')
                 return
@@ -86,10 +73,7 @@ const performDeletion = async (user: User) => {
     }
 }
 
-
-// ------------------------------------------------
 // 3. 削除ボタンの onPress イベント（確認ダイアログ表示）
-// ------------------------------------------------
 const handleDeleteAccount = () => {
     const user = auth.currentUser
     if (!user) {
@@ -106,16 +90,13 @@ const handleDeleteAccount = () => {
             {
                 text: '削除する',
                 style: 'destructive',
-                onPress: () => performDeletion(user) // 削除実行
+                onPress: () => performDeletion(user)
             }
         ]
     )
 }
 
-
-// ------------------------------------------------
 // 4. UIコンポーネント
-// ------------------------------------------------
 const DeleteAccountScreen = () => {
     const { styles } = useThemedStyles(createStyles)
     return (

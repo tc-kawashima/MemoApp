@@ -4,19 +4,15 @@ import {
     StyleSheet, TouchableOpacity
 } from 'react-native'
 import { router } from 'expo-router'
-// Firebase Auth の必要な関数と型をインポート
 import { EmailAuthProvider, linkWithCredential } from 'firebase/auth'
-import { auth } from '../../config' // auth インスタンスをインポート
+import { auth } from '../../config'
 import { useThemedStyles } from '../../hooks/useThemedStyles'
 import { ThemeColors } from '../../themes/colors'
 
-// ------------------------------------------------
 // アカウント連携（昇格）ロジック
-// ------------------------------------------------
 const handleLinkAccount = async (email: string, password: string): Promise<void> => {
     const user = auth.currentUser
 
-    // 1. ゲスト判定と入力チェック
     if (!user || !user.isAnonymous) {
         Alert.alert('エラー', 'この操作を実行するには、ゲストユーザーとしてサインインしている必要があります。')
         router.replace('/auth/log_in')
@@ -28,27 +24,20 @@ const handleLinkAccount = async (email: string, password: string): Promise<void>
     }
 
     try {
-        // 2. 新しい認証情報 (Email/Password) を作成
         const credential = EmailAuthProvider.credential(email, password)
 
-        // 3. 既存の匿名アカウントに認証情報を連携させる
         await linkWithCredential(user, credential)
 
-        // 4. 成功後の処理
         Alert.alert('連携完了', 'アカウントがメールアドレスに連携されました！')
-        router.replace('/memo/list') // メモ一覧に戻る
+        router.replace('/memo/list')
 
     } catch (error: unknown) {
 
-        // ログ出力（デバッグ用）
         console.error('アカウント連携失敗:', error)
 
-        // 1. errorがオブジェクトであり、codeプロパティを持つかをチェックする型ガード
         if (typeof error === 'object' && error !== null && 'code' in error) {
-            // Firebaseのエラーオブジェクトとしてアサーション
             const firebaseError = error as { code: string, message: string }
 
-            // 2. Firebaseのエラーコードに基づいた詳細なエラー処理
             if (firebaseError.code === 'auth/email-already-in-use') {
                 Alert.alert('連携失敗', 'このメールアドレスは既に別のアカウントで使用されています。')
             } else if (firebaseError.code === 'auth/invalid-email') {
@@ -62,10 +51,7 @@ const handleLinkAccount = async (email: string, password: string): Promise<void>
     }
 }
 
-
-// ------------------------------------------------
 // UI コンポーネント
-// ------------------------------------------------
 const LinkAccount = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')

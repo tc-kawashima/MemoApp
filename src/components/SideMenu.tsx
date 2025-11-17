@@ -24,13 +24,9 @@ interface SideMenuProps {
 }
 
 const SideMenu = ({ visible, onClose }: SideMenuProps) => {
-    // スケールアニメーション用の値 (0: 非表示, 1: 表示)
     const scaleAnim = useRef(new Animated.Value(0)).current
-    // フェードアニメーション用の値 (0: 透明, 1: 不透明)
     const fadeAnim = useRef(new Animated.Value(0)).current
-    // ユーザーの状態を管理（リアルタイムで isAnonymous を判定）
     const [isAnonymous, setIsAnonymous] = useState(auth.currentUser?.isAnonymous ?? false)
-    // useTheme からテーマ状態と切り替え関数を取得 ★
     const { themeName, setThemeName, theme } = useTheme()
     const [currentView, setCurrentView] = useState<MenuState>('main')
     const styles = createStyles(theme)
@@ -51,42 +47,38 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
         return unsubscribe
     }, [])
 
-    // visible の変更に応じてアニメーションを実行
     useEffect(() => {
         if (visible) {
             setCurrentView('main')
-            // 表示時にはフェードイン＆スケールアップ
             Animated.parallel([
                 Animated.timing(fadeAnim, {
                     toValue: 1,
-                    duration: 200, // フェードインの時間
+                    duration: 200,
                     useNativeDriver: true
                 }),
-                Animated.spring(scaleAnim, { // springアニメーションで少し弾むように
+                Animated.spring(scaleAnim, {
                     toValue: 1,
-                    friction: 7, // 弾む強さ
-                    tension: 40, // スピード
+                    friction: 7,
+                    tension: 40,
                     useNativeDriver: true
                 })
             ]).start()
         } else {
-            // 非表示時にはフェードアウト＆スケールダウン
             Animated.parallel([
                 Animated.timing(fadeAnim, {
                     toValue: 0,
-                    duration: 150, // フェードアウトの時間
+                    duration: 150,
                     useNativeDriver: true
                 }),
                 Animated.timing(scaleAnim, {
                     toValue: 0,
-                    duration: 150, // スケールダウンの時間
+                    duration: 150,
                     useNativeDriver: true
                 })
             ]).start()
         }
     }, [visible, fadeAnim, scaleAnim])
 
-    // ログアウト処理
     const performLogout = () => {
         auth.signOut().then(() => {
             onClose()
@@ -119,41 +111,36 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
         )
     }
 
-    // アカウント連携画面への遷移
     const handleLinkAccount = () => {
         onClose()
         router.replace('/settings/link_account')
     }
 
-    // アカウント削除画面への遷移
     const handleDeleteAccount = () => {
         onClose()
         router.replace('/settings/delete_account')
     }
 
-    // visible が false の間は Modal を非表示にし、描画負荷を軽減
     if (!visible) return null
 
     return (
         <Modal
             transparent={true}
             visible={visible}
-            animationType="none" // アニメーションは Animated.View で制御
+            animationType="none"
             onRequestClose={onClose}
         >
-            {/* 1. オーバーレイ (画面全体を覆う半透明な背景) */}
             <TouchableOpacity
                 style={[styles.overlay, { backgroundColor: theme.background + '99' } as StyleProp<ViewStyle>]}
                 activeOpacity={1}
-                onPress={onClose} // オーバーレイタップで閉じる
+                onPress={onClose}
             >
-                {/* 2. 中央表示されるメニュー本体 */}
                 <Animated.View
                     style={[
                         styles.menuContainer,
                         {
-                            opacity: fadeAnim, // フェードアニメーション
-                            transform: [{ scale: scaleAnim }], // スケールアニメーション
+                            opacity: fadeAnim,
+                            transform: [{ scale: scaleAnim }],
                             backgroundColor: theme.listItemBackground
                         }
                     ]}
@@ -218,8 +205,8 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
 const createStyles = (theme: ThemeColors) => StyleSheet.create({
     overlay: {
         flex: 1,
-        justifyContent: 'center', // 中央寄せ
-        alignItems: 'center'     // 中央寄せ
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     menuContainer: {
         width: width * 0.8,
@@ -296,10 +283,9 @@ const createStyles = (theme: ThemeColors) => StyleSheet.create({
         marginBottom: 8
     },
     backButtonContainer: {
-        // backButtonを囲むView
         width: '100%',
         marginTop: 16,
-        alignItems: 'flex-end' // ボタンを右に寄せる
+        alignItems: 'flex-end'
     },
     backButton: {
         alignSelf: "flex-end",
